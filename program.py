@@ -77,6 +77,7 @@ class MainWindow(QtWidgets.QWidget):
     def get_by_id(self):
         id_ = self.id_edit.text()
         if id_ == '':
+            self.status_line.setStyleSheet("color: red")
             self.status_line.setText('ID must be filled.')
             pass
         else:
@@ -86,6 +87,7 @@ class MainWindow(QtWidgets.QWidget):
                 self.data_edit.setText('')
                 self.data_edit.append(f'{customer}')
             except ValueError:
+                self.status_line.setStyleSheet("color: red")
                 self.status_line.setText('ID must be integer.')
 
     def insert_customer_to_db(self):
@@ -95,6 +97,7 @@ class MainWindow(QtWidgets.QWidget):
         address = self.insert_address_edit.text()
         mobile = self.insert_mobile_edit.text()
         if id_ == '' or fname == '' or lname == '' or address == '' or mobile == '':
+            self.status_line.setStyleSheet("color: red")
             self.status_line.setText('All insert fields must be filled.')
             pass
         elif id_ != '':
@@ -103,18 +106,22 @@ class MainWindow(QtWidgets.QWidget):
                 inserted_customer = Customer(int_id_, fname, lname, address, mobile)
                 customer = self.data_access.get_customers_by_id(int_id_)
                 if isinstance(customer, Customer):
+                    self.status_line.setStyleSheet("color: red")
                     self.status_line.setText('Insert failed. The customer id already exists in the db.')
                     pass
                 else:
                     self.data_access.insert_customer(inserted_customer)
+                    self.status_line.setStyleSheet("color: green")
                     self.status_line.setText('Insert Done.')
             except ValueError:
+                self.status_line.setStyleSheet("color: red")
                 self.status_line.setText('ID must be integer.')
                 pass
 
     def delete_customer_in_db(self):
         id_ = self.delete_id_edit.text()
         if id_ == '':
+            self.status_line.setStyleSheet("color: red")
             self.status_line.setText('Deleted customer ID must be filled.')
             pass
         elif id_ != '':
@@ -122,11 +129,14 @@ class MainWindow(QtWidgets.QWidget):
                 int_id_ = int(id_)
                 output = self.data_access.delete_customer(int_id_)
                 if output is None:
+                    self.status_line.setStyleSheet("color: red")
                     self.status_line.setText('Delete failed. No such ID in the db.')
                     pass
                 else:
+                    self.status_line.setStyleSheet("color: green")
                     self.status_line.setText('Delete Done.')
             except ValueError:
+                self.status_line.setStyleSheet("color: red")
                 self.status_line.setText('ID must be integer.')
                 pass
 
@@ -137,6 +147,7 @@ class MainWindow(QtWidgets.QWidget):
         address = self.insert_address_edit.text()
         mobile = self.insert_mobile_edit.text()
         if id_ == '' or fname == '' or lname == '' or address == '' or mobile == '':
+            self.status_line.setStyleSheet("color: red")
             self.status_line.setText('All insert fields must be filled.')
             pass
         elif id_ != '':
@@ -145,12 +156,15 @@ class MainWindow(QtWidgets.QWidget):
                 updated_customer = Customer(int_id_, fname, lname, address, mobile)
                 customer = self.data_access.get_customers_by_id(int_id_)
                 if not isinstance(customer, Customer):
+                    self.status_line.setStyleSheet("color: red")
                     self.status_line.setText('Update failed. N0 such ID in the db.')
                     pass
                 else:
                     self.data_access.update_customer(int_id_, updated_customer)
+                    self.status_line.setStyleSheet("color: green")
                     self.status_line.setText('Update Done.')
             except ValueError:
+                self.status_line.setStyleSheet("color: red")
                 self.status_line.setText('ID must be integer.')
                 pass
 
@@ -186,5 +200,3 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
-
-
