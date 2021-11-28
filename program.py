@@ -10,7 +10,7 @@ class MainWindow(QtWidgets.QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.data_access = CustomerDataAccess('hanuka.db')
-        self.setGeometry(QtCore.QRect(400, 400, 500, 400))
+        self.setGeometry(QtCore.QRect(400, 200, 500, 400))
         self.setStyleSheet('font-size: 15px;')
 
         self.setWindowTitle("Customers Data Access")
