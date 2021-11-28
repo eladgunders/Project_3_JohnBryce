@@ -2,9 +2,11 @@ from Customer import Customer
 from CustomerDataAccess import CustomerDataAccess
 from PyQt5 import QtWidgets, QtCore
 import traceback
+from functools import partial
 
 
 class MainWindow(QtWidgets.QWidget):
+
     def __init__(self):
         super(MainWindow, self).__init__()
         self.data_access = CustomerDataAccess('hanuka.db')
@@ -110,9 +112,12 @@ class MainWindow(QtWidgets.QWidget):
                     self.status_line.setText('Insert failed. The customer id already exists in the db.')
                     pass
                 else:
-                    self.data_access.insert_customer(inserted_customer)
-                    self.status_line.setStyleSheet("color: green")
-                    self.status_line.setText('Insert Done.')
+                    if self.data_access.check_if_full_name_exists(fname, lname):
+                        self.show_warning_popup(inserted_customer)
+                    else:
+                        self.data_access.insert_customer(inserted_customer)
+                        self.status_line.setStyleSheet("color: green")
+                        self.status_line.setText('Insert Done.')
             except ValueError:
                 self.status_line.setStyleSheet("color: red")
                 self.status_line.setText('ID must be integer.')
@@ -168,6 +173,24 @@ class MainWindow(QtWidgets.QWidget):
                 self.status_line.setText('ID must be integer.')
                 pass
 
+    def show_warning_popup(self, ins_customer):
+        msg = QtWidgets.QMessageBox()
+        msg.setWindowTitle('WARNING!')
+        msg.setText('Are you sure you want to insert this customer? Fname and Lname already exists in the db.')
+        msg.setIcon(QtWidgets.QMessageBox.Question)
+        msg.setStandardButtons(QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        msg.setDefaultButton(QtWidgets.QMessageBox.Ignore)
+        msg.buttonClicked.connect(partial(self.popup_button, ins_customer))
+
+        x = msg.exec_()
+
+    def popup_button(self, ins_cus, a):
+        if a.text() == '&Yes':
+            self.data_access.insert_customer(ins_cus)
+            self.status_line.setStyleSheet("color: green")
+            self.status_line.setText('Insert Done.')
+            pass
+
 
 def excepethook(exc_type, exc_value, exc_tb):
     tb = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
@@ -200,3 +223,5 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
+
+
