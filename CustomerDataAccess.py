@@ -96,6 +96,13 @@ class CustomerDataAccess:
                 print('Update Done')
                 return True
 
+    def check_if_full_name_exists(self, fname, lname):
+        self.db_cursor.execute(f'SELECT * FROM customers WHERE FNAME="{fname}" AND LNAME="{lname}"')
+        customer = []
+        for x in self.db_cursor:
+            customer.append(x)
+        return True if customer else False
+
     def __repr__(self):
         return f'CustomerDataAccess(db_file_path="{self.db_file_path}")'
 
