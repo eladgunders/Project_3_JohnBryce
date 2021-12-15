@@ -18,3 +18,11 @@ class Company(Base):
 
     def __str__(self):
         return f'\n<Company id={self.id} name={self.name} age={self.age} address={self.self.adress} salary={self.salary}>'
+    
+    #local_session.add(Company(name='Elad', age=22, address='Sokolov 11', salary='60000'))
+#local_session.commit()
+#com1 = Company(name='Yishay', age=22, address='Sokolov 11', salary='60000')
+#com2 = Company(name='Uri', age=22, address='Sokolov 11', salary='60000')
+#com_ls = [com1, com2]
+#local_session.add_all(com_ls)
+#local_session.commit()
